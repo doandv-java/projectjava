@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>User</title>
+<!--    <link rel="icon" type="image/png" th:href="@{/images/logo-small.png}"/>-->
+
+    <!-- Bootstrap Core CSS -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link th:href="@{/css/metisMenu.min.css}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link th:href="@{/css/startmin.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <!--<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" type="text/css">-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">-->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+<div id="wrapper">
+
+    <!-- Navigation -->
+    <div th:replace="fragments/header-admin :: header_admin_info (vm=${vm.getLayoutHeaderAdminVM()})"></div>
+
+
+    <!-- Page Content -->
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header" id="main-title">User Management</h1>
+                    <div id="main-content">
+                        <div class="row">
+                            <div class="col-sm-8 col-12">
+                                <!--<button type="button" class="btn btn-primary" id="new-product" data-toggle="modal" style="margin-bottom: 20px" data-target="#exampleModalLong">-->
+                                    <!---->
+                                <!--</button>-->
+                            </div>
+                            <div class="col-sm-4 col-12">
+                                <form style="float: right" class="form-inline my-2 my-lg-0 float-sm-right" th:action="@{/admin/user}" th:object="${userName}"  method="get">
+                                    <!--<div class="form-group">-->
+                                        <!--<label>Category:</label>-->
+                                        <!--<select th:field="*{categoryId}"  class="form-control" id="input-product-category" placeholder="Choose Category">-->
+                                            <!--<option th:each="category : ${vm.getCategoryVMList()}" th:value="${category.getId()}" th:text="${category.getName()}"></option>-->
+                                        <!--</select>-->
+                                    <!--</div>-->
+
+                                    <!--<div class="form-group">-->
+                                        <!--<label>Category:</label>-->
+                                        <!--<select th:field="*{categoryId}"  class="form-control" id="input-product-category" placeholder="Choose Category">-->
+                                            <!--<option th:each="category : ${vm.getCategoryVMList()}" th:value="${category.getId()}" th:text="${category.getName()}"></option>-->
+                                        <!--</select>-->
+                                    <!--</div>-->
+                                    <!---->
+                                    <input id="key-search" class="form-control mr-sm-2" type="search" th:field="*{name}"  placeholder="Search..." aria-label="Search">
+                                    <button class="btn btn-success" type="submit">Search</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="row">
+
+
+                        </div>
+                        <h2 th:if="${vm.getKeyWord()}" th:text="${vm.getKeyWord()}"></h2>
+
+                        <table class="table table-bordered mt-3">
+                            <thead>
+                            <tr style="text-align: center">
+                                <th  style="background-color: #1ab7ea; text-align: center; width: 30px">
+                                    No.
+                                </th>
+                                <th colspan="2" style="background-color: #1ab7ea; text-align: center">
+                                    Username
+                                </th>
+                                <th colspan="2" style="background-color: #1ab7ea; text-align: center">
+                                    Customer Name
+                                </th>
+                                <th colspan="2" style="background-color: #1ab7ea; text-align: center">
+                                    Date of Birth
+                                </th>
+                                <th colspan="2" style="background-color: #1ab7ea; text-align: center">
+                                    Gender
+                                </th>
+                                <th colspan="2" style="background-color: #1ab7ea; text-align: center">
+                                    Role
+                                </th>
+
+                                <th colspan="2" style="background-color: #1ab7ea; text-align: center">
+
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="user,iter : ${vm.getUserVMList()}">
+                                <td colspan="1" th:text="${page.number*page.size + iter.index+1}"></td>
+                                <td colspan="2" th:text="${user.getUserName()}"></td>
+                                <td colspan="2" th:text="${user.getName()}"></td>
+                                <td colspan="2" th:text="${user.getDateOfBirth()}"></td>
+                                <td colspan="2" th:if="${user.getGender()==1}">Male</td>
+                                <td colspan="2" th:unless="${user.getGender()==1}">Female</td>
+                                <td colspan="2" style="width: 100px" >
+                                    <!--th:text="${order.getDeliveryStatus()}"-->
+                                    <select class="form-control changeRole" th:attr="data-id=${user.getId()}" id="input-product-promotion" placeholder="Choose " >
+                                        <option th:each="role : ${vm.getRoleVMList()}" th:value="${role.getId()}"
+                                                th:text="${role.getName()}"  th:selected="${role.getId() == user.getRoleId() ? true : false}"></option>
+                                    </select>
+                                </td>
+
+                                <td colspan="1" style="text-align: center">
+                                    <a class="fa fa-trash-o tooltip-test delUser"   th:attr="data-id=${user.getId()}"  style="cursor: pointer; font-size: 20px" title="Delete"></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+
+
+                        <nav style="margin-top: 50px" aria-label="..." th:if="${vm.getUserVMList().size()>0}">
+                            <ul class="pagination">
+                                <th:block th:each="i: ${#numbers.sequence(0, page.totalPages - 1)}">
+                                    <li class="page-item active" th:if="${page.number == i}" aria-current="page">
+                                        <a class="page-link" th:href="${''}" th:text="${i+1}"><span class="sr-only"></span></a>
+                                    </li>
+                                    <li class="page-item"  th:unless="${page.number == i}"><a class="page-link" th:text="${i+1}"
+                                                                                              th:href="${'?'
+                                                                                       +('&page='+i)
+                                                                                       +(#httpServletRequest.getParameter('size')==null?'':('&size='+#httpServletRequest.getParameter('size')))
+                                                                                       +(#httpServletRequest.getParameter('customerName')==null?'':('&customerName='+#httpServletRequest.getParameter('customerName')))
+                                                                                       +(#httpServletRequest.getParameter('name')==null?'':('&name='+#httpServletRequest.getParameter('name')))}"></a></li>
+                                </th:block>
+                            </ul>
+                        </nav>
+                    </div>
+
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+
+    </div>
+    <!-- /#page-wrapper -->
+
+
+
+</div>
+<!-- /#wrapper -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.9.0/sweetalert2.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+
+<!-- jQuery -->
+<script th:src="@{/js/jquery.min.js}"></script>
+<!--<script th:src="@{/js/jquery-ui.js}"></script>-->
+<!--<script th:src="@{/js/jquery-migrate-3.0.0.min.js}"></script>-->
+<!--<script th:src="@{/js/Inform.js}"></script>-->
+<script th:src="@{/plugin/tinymce/tinymce.min.js}"></script>
+<script th:src="@{/plugin/tinymce/init-tinymce.js}"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script th:src="@{/js/bootstrap.min.js}"></script>
+
+<!-- Metis Menu Plugin JavaScript -->
+<script th:src="@{/js/metisMenu.min.js}"></script>
+
+<!-- Custom Theme JavaScript -->
+<script th:src="@{/js/startmin.js}"></script>
+<script th:src="@{/js/bootbox.min.js}"></script>
+
+<script th:src="@{/js/admin-product.js}"></script>
+<script th:src="@{/js/script.js}"></script>
+
+
+</body>
+</html>

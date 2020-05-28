@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Mail</title>
+<!--    <link rel="icon" type="image/png" th:href="@{/images/logo-small.png}"/>-->
+
+    <!-- Bootstrap Core CSS -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link th:href="@{/css/metisMenu.min.css}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link th:href="@{/css/startmin.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <!--<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" type="text/css">-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">-->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+    
+    	<!-- Vendor CSS -->
+    <!--<link rel="stylesheet" th:href="@{/assets/vendor/bootstrap/css/bootstrap.css}" />-->
+    <link rel="stylesheet" th:href="@{/assets/vendor/font-awesome/css/font-awesome.css}" />
+    <link rel="stylesheet" th:href="@{/assets/vendor/magnific-popup/magnific-popup.css}" />
+    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-datepicker/css/datepicker3.css}" />
+
+    <!-- Specific Page Vendor CSS -->
+    <link rel="stylesheet" th:href="@{/assets/vendor/summernote/summernote.css}" />
+    <link rel="stylesheet" th:href="@{/assets/vendor/summernote/summernote-bs3.css}" />
+
+    <!-- Theme CSS -->
+    <!--<link rel="stylesheet" th:href="@{/assets/stylesheets/theme.css}" />-->
+
+    <!-- Skin CSS -->
+    <!--<link rel="stylesheet" th:href="@{/assets/stylesheets/skins/default.css}" />-->
+
+    <!-- Theme Custom CSS -->
+    <link rel="stylesheet" th:href="@{/assets/stylesheets/theme-custom.css}">
+
+    <!-- Head Libs -->
+    <script th:src="@{/assets/vendor/modernizr/modernizr.js}"></script>
+    <![endif]-->
+</head>
+<body>
+
+<div id="wrapper">
+
+    <!-- Navigation -->
+    <div th:replace="fragments/header-admin :: header_admin_info (vm=${vm.getLayoutHeaderAdminVM()})"></div>
+
+
+    <!-- Page Content -->
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header" id="main-title">Inbox</h1>
+                    <div id="main-content">
+                        <div class="row">
+                            <div class="col-sm-8 col-12">
+
+                            </div>
+                            <div class="col-sm-4 col-12">
+                                <form style="float: right" class="form-inline my-2 my-lg-0 float-sm-right" th:action="@{/admin/mail}" th:object="${messageVM}"  method="get">
+                                    <input id="key-search" class="form-control mr-sm-2" type="search" th:field="*{keyword}"  placeholder="Search..." aria-label="Search">
+                                    <button class="btn btn-success" type="submit">Search</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="row">
+
+
+                        </div>
+                        <h2 th:if="${vm.getKeyWord()}" th:text="${vm.getKeyWord()}"></h2>
+
+
+                        <!--mail sonnx-->
+                        <section role="main" class="content-body">
+
+
+                            <!-- start: page -->
+                            <section class="content-with-menu mailbox">
+                                <div class="content-with-menu-container" data-mailbox data-mailbox-view="folder">
+
+
+
+                                    <div class="inner-body mailbox-folder">
+                                        <!-- START: .mailbox-header -->
+
+                                        <!-- END: .mailbox-header -->
+
+                                        <!-- START: .mailbox-actions -->
+                                        <div class="mailbox-actions">
+                                            <ul class="list-unstyled m-none pt-lg pb-lg">
+
+                                                <!--<li class="ib mr-sm">-->
+                                                    <!--<a class="item-action fa fa-refresh" href="/admin/mail" title="Refresh" style="color: green"></a>-->
+                                                <!--</li>-->
+                                                <!--<li class="ib mr-sm">-->
+                                                    <!--<a class="item-action fa fa-tag" href="#" id="addImportant" title="Important" style="color: yellow"></a>-->
+                                                <!--</li>-->
+                                                <!--<li class="ib">-->
+                                                    <!--<a class="item-action fa fa-times text-danger" href="#" id="delMessage" title="Delete" style="color: red"></a>-->
+                                                <!--</li>-->
+                                            </ul>
+                                        </div>
+                                        <!-- END: .mailbox-actions -->
+
+                                        <div id="mailbox-email-list" class="mailbox-email-list">
+                                            <div class="nano">
+                                                <div class="nano-content">
+                                                    <ul id="" class="list-unstyled" style="color: black">
+
+                                                       <div th:each="message : ${vm.getMessageVMList()}">
+                                                           <li th:if="${message.getStatus()}"  class="unread" style="font-weight: bolder;color: black">
+                                                               <a th:href="${'/admin/mail/detail/'+message.getId()}">
+                                                                   <!--<i th:if="${message.getImportant()}" class="mail-label" style="border-color: #EA4C89"></i>-->
+                                                                   <div class="col-sender">
+                                                                       <!--<div class="checkbox-custom checkbox-text-primary ib">-->
+                                                                           <!--<input type="checkbox" id="mail1">-->
+                                                                           <!--<label for="mail1"></label>-->
+                                                                       <!--</div>-->
+                                                                       <p class="m-none ib MySender" th:text="${message.getEmail()}">Okler Themes</p>
+                                                                   </div>
+                                                                   <div class="col-mail">
+                                                                       <p class="m-none mail-content">
+                                                                           <span class="subject MyContent" th:text="${message.getTitle()+' - '+message.getContent()}">Check out our new Porto Admin theme! &nbsp;–&nbsp;</span>
+                                                                           <!--<span class="mail-partial" th:text="${message.getContent()}">We are proud to announce that our new theme Porto Admin is ready, wants to know more about it?</span>-->
+                                                                       </p>
+                                                                       <p class="m-none mail-date MyDate" th:text="${message.getCreatedDate()}">11:35 am</p>
+                                                                   </div>
+                                                               </a>
+                                                           </li>
+                                                           <li th:unless="${message.getStatus()}"  >
+                                                               <a th:href="${'/admin/mail/detail/'+message.getId()}">
+                                                                   <!--<i th:if="${message.getImportant()}" class="mail-label" style="border-color: #EA4C89"></i>-->
+                                                                   <!--<i th:if="${message.getImportant()}" class="mail-label" style="border-color: #EA4C89"></i>-->
+                                                                   <div class="col-sender">
+                                                                       <!--<div class="checkbox-custom checkbox-text-primary ib">-->
+                                                                           <!--<input type="checkbox" id="mail1">-->
+                                                                           <!--<label for="mail1"></label>-->
+                                                                       <!--</div>-->
+                                                                       <p class="m-none ib MySender" th:text="${message.getEmail()}">Okler Themes</p>
+                                                                   </div>
+                                                                   <div class="col-mail">
+                                                                       <p class="m-none mail-content">
+                                                                           <span class="subject MyContent" th:text="${message.getTitle()+' - '+message.getContent()}">Check out our new Porto Admin theme! &nbsp;–&nbsp;</span>
+                                                                           <!--<span class="mail-partial" th:text="${message.getContent()}">We are proud to announce that our new theme Porto Admin is ready, wants to know more about it?</span>-->
+                                                                       </p>
+                                                                       <p class="m-none mail-date MyDate" th:text="${message.getCreatedDate()}">11:35 am</p>
+                                                                   </div>
+                                                               </a>
+                                                           </li>
+
+
+                                                       </div>
+
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            <!-- end: page -->
+                        </section>
+
+
+
+                        <nav style="margin-top: 50px" aria-label="..." th:if="${vm.getMessageVMList().size()>0}">
+                            <ul class="pagination">
+                                <th:block th:each="i: ${#numbers.sequence(0, page.totalPages - 1)}">
+                                    <li class="page-item active" th:if="${page.number == i}" aria-current="page">
+                                        <a class="page-link" th:href="${''}" th:text="${i+1}"><span class="sr-only"></span></a>
+                                    </li>
+                                    <li class="page-item"  th:unless="${page.number == i}"><a class="page-link" th:text="${i+1}"
+                                                                                              th:href="${'?'
+                                                                                       +('&page='+i)
+                                                                                       +(#httpServletRequest.getParameter('size')==null?'':('&size='+#httpServletRequest.getParameter('size')))
+                                                                                       +(#httpServletRequest.getParameter('customerName')==null?'':('&customerName='+#httpServletRequest.getParameter('customerName')))
+                                                                                       +(#httpServletRequest.getParameter('name')==null?'':('&name='+#httpServletRequest.getParameter('name')))}"></a></li>
+                                </th:block>
+                            </ul>
+                        </nav>
+                    </div>
+
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+
+    </div>
+    <!-- /#page-wrapper -->
+
+
+
+</div>
+<!-- /#wrapper -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.9.0/sweetalert2.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+
+<!-- jQuery -->
+<script th:src="@{/js/jquery.min.js}"></script>
+<!--<script th:src="@{/js/jquery-ui.js}"></script>-->
+<!--<script th:src="@{/js/jquery-migrate-3.0.0.min.js}"></script>-->
+<!--<script th:src="@{/js/Inform.js}"></script>-->
+<script th:src="@{/plugin/tinymce/tinymce.min.js}"></script>
+<script th:src="@{/plugin/tinymce/init-tinymce.js}"></script>
+
+
+
+<!---->
+<!-- Vendor -->
+<script th:src="@{/assets/vendor/jquery/jquery.js}"></script>
+<script th:src="@{/assets/vendor/jquery-browser-mobile/jquery.browser.mobile.js}"></script>
+<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.js}"></script>
+<script th:src="@{/assets/vendor/nanoscroller/nanoscroller.js}"></script>
+<script th:src="@{/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js}"></script>
+<script th:src="@{/assets/vendor/magnific-popup/magnific-popup.js}"></script>
+<script th:src="@{/assets/vendor/jquery-placeholder/jquery.placeholder.js}"></script>
+
+<!-- Specific Page Vendor -->
+<script th:src="@{/assets/vendor/summernote/summernote.js}"></script>
+
+<!-- Theme Base, Components and Settings -->
+<script th:src="@{/assets/javascripts/theme.js}"></script>
+
+<!-- Theme Custom -->
+<script th:src="@{/assets/javascripts/theme.custom.js}"></script>
+
+<!-- Theme Initialization Files -->
+<script th:src="@{/assets/javascripts/theme.init.js}"></script>
+<!---->
+<!-- Bootstrap Core JavaScript -->
+<script th:src="@{/js/bootstrap.min.js}"></script>
+
+<!-- Metis Menu Plugin JavaScript -->
+<script th:src="@{/js/metisMenu.min.js}"></script>
+
+<!-- Custom Theme JavaScript -->
+<script th:src="@{/js/startmin.js}"></script>
+<script th:src="@{/js/bootbox.min.js}"></script>
+
+<script th:src="@{/js/admin-product.js}"></script>
+<script th:src="@{/js/script.js}"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Store</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->
+    <!--    <link rel="icon" type="image/png" th:href="@{/images/logo-small.png}"/>-->
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/fonts/font-awesome-4.7.0/css/font-awesome.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/fonts/iconic/css/material-design-iconic-font.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/fonts/linearicons-v1.0.0/icon-font.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/animate/animate.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/css-hamburgers/hamburgers.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/animsition/css/animsition.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/select2/select2.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/daterangepicker/daterangepicker.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/slick/slick.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/MagnificPopup/magnific-popup.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/perfect-scrollbar/perfect-scrollbar.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/util.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/price-range.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <!--===============================================================================================-->
+</head>
+<body class="animsition">
+
+<div th:replace="fragments/header :: header (vm=${vm})"></div>
+
+<!-- Cart -->
+<div class="wrap-header-cart js-panel-cart">
+    <div class="s-full js-hide-cart"></div>
+
+    <div class="header-cart flex-col-l p-l-65 p-r-25">
+        <div class="header-cart-title flex-w flex-sb-m p-b-8">
+				<span class="mtext-103 cl2">
+					Cart
+				</span>
+
+            <div class="fs-35 lh-10 cl2 p-lr-5 pointer hov-cl1 trans-04 js-hide-cart">
+                <i class="zmdi zmdi-close"></i>
+            </div>
+        </div>
+
+        <div class="header-cart-content flex-w js-pscroll">
+            <ul th:each="cartProduct:${vm.getCartProductVMList()}" class="header-cart-wrapitem w-full">
+                <li class="header-cart-item flex-w flex-t m-b-12">
+                    <div class="header-cart-item-img">
+                        <img th:src="${cartProduct.getMainImage()}" alt="IMG">
+                    </div>
+
+                    <div class="header-cart-item-txt p-t-8">
+                        <a th:text="${cartProduct.getName()+'('+cartProduct.getSizeName()+'-'+cartProduct.getColorName()+')'}"
+                           th:href="${'/product/'+cartProduct.getProductId()}" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
+                            White Shirt Pleat
+                        </a>
+
+                        <span th:text="${cartProduct.getAmount()+'x'+cartProduct.getPrice()+' VND'}" class="header-cart-item-info">
+								1 x $19.00
+							</span>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="w-full">
+                <div th:text="${'Total: '+ vm.getTotalPrice()+' VND'}" class="header-cart-total w-full p-tb-40">
+                    Total: $75.00
+                </div>
+
+                <div class="header-cart-buttons flex-w w-full">
+                    <a href="/cart/shoping-cart" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
+                        Details
+                    </a>
+
+                    <!--<a href="/order/checkout" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">-->
+                        <!--Checkout-->
+                    <!--</a>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Product -->
+<section class="bg0 p-t-23 p-b-140">
+    <div class="container">
+        <div class="p-b-10">
+            <!--<h3 class="ltext-103 cl5">-->
+                <!--Store-->
+            <!--</h3>-->
+        </div>
+
+        <div class="flex-w flex-sb-m p-b-52">
+            <div class="flex-w flex-l-m filter-tope-group m-tb-10">
+                <a th:if="${#httpServletRequest.getParameter('categoryId')}==null"
+                   class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5  my-fonts my-font how-active1"  th:href="${'/store'}">
+                   All the products
+                </a>
+                <a th:unless="${#httpServletRequest.getParameter('categoryId')}==null"
+                   class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5  my-fonts my-font"  th:href="${'/store'}">
+                    All the products
+                </a>
+
+                <span th:each="category : ${vm.getCategoryVMList()}"  class="">
+
+                    <a th:if="${#httpServletRequest.getParameter('categoryId')}==${category.getId()}"
+                       class="stext-106 cl6 hov1  bor3 how-active1 trans-04 m-r-32 m-tb-5 my-font"
+                       th:href="${'/store/?categoryId='+category.getId()}"  th:text="${category.getName()}" ></a>
+
+                    <a th:unless="${#httpServletRequest.getParameter('categoryId')}==${category.getId()}"
+                          class="stext-106 cl6 hov1  bor3 trans-04 m-r-32 m-tb-5 my-font"
+                          th:href="${'/store/?categoryId='+category.getId()}"  th:text="${category.getName()}" ></a>
+
+
+
+
+
+                    <!--th:attr="data-filter='.'+${category.getId()}"-->
+                           <!--Car Toys-->
+
+
+                </span>
+
+
+                <!--<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 my-font" data-filter=".7">-->
+                    <!--Cute Bears-->
+                <!--</button>-->
+
+                <!--<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 my-font" data-filter=".8">-->
+                    <!--Gundam-->
+                <!--</button>-->
+
+
+            </div>
+
+            <div class="flex-w flex-c-m m-tb-10">
+                <div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter my-font">
+                    <i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
+                    <i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
+                    Filter
+                </div>
+
+                <!--<div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search my-font">-->
+                    <!--<i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>-->
+                    <!--<i class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>-->
+                    <!--Search-->
+                <!--</div>-->
+            </div>
+
+            <!-- Search product -->
+            <div class="dis-none panel-search w-full p-t-10 p-b-15">
+                <form  class="bor8 dis-flex p-l-15"  th:action="@{/store}" th:object="${productname}" method="get">
+                    <button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
+                        <i class="zmdi zmdi-search"></i>
+                    </button>
+
+                    <input class="mtext-107 cl2 size-114 plh2 p-r-15" th:field="*{name}"  type="text" name="search-product" placeholder="Search">
+                </form>
+            </div>
+
+            <!-- Filter -->
+            <div class="dis-none panel-filter w-full p-t-10">
+                <div class="wrap-filter flex-w bg6 w-full p-lr-40 p-t-27 p-lr-15-sm">
+                    <!--<div class="filter-col2 p-r-15 p-b-27">-->
+                        <!--<div class="price-range">&lt;!&ndash;price-range&ndash;&gt;-->
+                            <!--<div class="mtext-102 cl2 p-b-15">-->
+                                <!--Price-->
+                            <!--</div>-->
+                            <!--<div class="well text-center">-->
+                                <!--<input type="text" class="span2" value="" data-slider-min="0"-->
+                                       <!--data-slider-max="500" data-slider-step="1000" data-slider-value="[0,100]" id="sl2" ><br />-->
+                                <!--<b class="pull-left">0</b> <b class="pull-right">5.000.000đ</b>-->
+                            <!--</div>-->
+                        <!--</div>&lt;!&ndash;/price-range&ndash;&gt;-->
+
+
+                    <!--</div>-->
+
+                    <div class="filter-col3 p-r-15 p-b-27">
+                        <div class="mtext-102 cl2 p-b-15">
+                            Color
+                        </div>
+
+                        <ul th:each="color:${vm.getColorVMList()}" style="font-family: Arial, Helvetica, sans-serif">
+                            <li class="p-b-6 ">
+                                <!--<span class="fs-15 lh-12 m-r-6" style="color: #222;">-->
+                                <!--<i class="zmdi zmdi-circle"></i>-->
+                                <!--</span>-->
+
+                                <a th:if="${#httpServletRequest.getParameter('colorId')}==${color.getId()}" th:text="${color.getName()}"
+                                   class="filter-link stext-106 trans-04 filter-link-active"
+                                   th:href="${'?'+(#httpServletRequest.getParameter('categoryId')==null?'':('&categoryId='+#httpServletRequest.getParameter('categoryId')))
+                                              +(#httpServletRequest.getParameter('page')==null?'':('&page='+#httpServletRequest.getParameter('page')))
+                                              +(#httpServletRequest.getParameter('size')==null?'':('&size='+#httpServletRequest.getParameter('size')))
+                                              +(#httpServletRequest.getParameter('sizeId')==null?'':('&sizeId='+#httpServletRequest.getParameter('sizeId')))
+                                              +(#httpServletRequest.getParameter('supplyId')==null?'':('&supplyId='+#httpServletRequest.getParameter('supplyId')))
+                                              +('&colorId='+color.getId())
+                                              +(#httpServletRequest.getParameter('name')==null?'':('&name='+#httpServletRequest.getParameter('name')))}" >
+                                    Black
+                                </a>
+
+                                <a th:unless="${#httpServletRequest.getParameter('colorId')}==${color.getId()}" th:text="${color.getName()}" class="filter-link stext-106 trans-04"
+                                   th:href="${'?'+(#httpServletRequest.getParameter('categoryId')==null?'':('&categoryId='+#httpServletRequest.getParameter('categoryId')))
+                                              +(#httpServletRequest.getParameter('page')==null?'':('&page='+#httpServletRequest.getParameter('page')))
+                                              +(#httpServletRequest.getParameter('size')==null?'':('&size='+#httpServletRequest.getParameter('size')))
+                                              +(#httpServletRequest.getParameter('sizeId')==null?'':('&sizeId='+#httpServletRequest.getParameter('sizeId')))
+                                              +(#httpServletRequest.getParameter('supplyId')==null?'':('&supplyId='+#httpServletRequest.getParameter('supplyId')))
+                                              +('&colorId='+color.getId())
+                                              +(#httpServletRequest.getParameter('name')==null?'':('&name='+#httpServletRequest.getParameter('name')))}" >
+                                    Black
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="filter-col4 p-b-27">
+                        <div class="mtext-102 cl2 p-b-15">
+                            Size
+                        </div>
+
+                        <div th:each="size:${vm.getSizeVMList()}" class="flex-w p-t-4 m-r--5">
+                            <a  th:if="${#httpServletRequest.getParameter('sizeId')}==${size.getId()}"  th:text="${size.getName()}"
+                                class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5 filter-link-active-2"
+                                th:href="${'?'+(#httpServletRequest.getParameter('categoryId')==null?'':('&categoryId='+#httpServletRequest.getParameter('categoryId')))
+                                              +(#httpServletRequest.getParameter('page')==null?'':('&page='+#httpServletRequest.getParameter('page')))
+                                              +(#httpServletRequest.getParameter('size')==null?'':('&size='+#httpServletRequest.getParameter('size')))
+                                              +(#httpServletRequest.getParameter('colorId')==null?'':('&colorId='+#httpServletRequest.getParameter('colorId')))
+                                              +(#httpServletRequest.getParameter('supplyId')==null?'':('&supplyId='+#httpServletRequest.getParameter('supplyId')))
+                                              +('&sizeId='+size.getId())
+                                              +(#httpServletRequest.getParameter('name')==null?'':('&name='+#httpServletRequest.getParameter('name')))}" >
+                                Fashion
+                            </a>
+                            <a  th:unless="${#httpServletRequest.getParameter('sizeId')}==${size.getId()}"  th:text="${size.getName()}"
+                                class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5 "
+                                th:href="${'?'+(#httpServletRequest.getParameter('categoryId')==null?'':('&categoryId='+#httpServletRequest.getParameter('categoryId')))
+                                              +(#httpServletRequest.getParameter('page')==null?'':('&page='+#httpServletRequest.getParameter('page')))
+                                              +(#httpServletRequest.getParameter('size')==null?'':('&size='+#httpServletRequest.getParameter('size')))
+                                              +(#httpServletRequest.getParameter('colorId')==null?'':('&colorId='+#httpServletRequest.getParameter('colorId')))
+                                              +(#httpServletRequest.getParameter('supplyId')==null?'':('&supplyId='+#httpServletRequest.getParameter('supplyId')))
+                                              +('&sizeId='+size.getId())
+                                              +(#httpServletRequest.getParameter('name')==null?'':('&name='+#httpServletRequest.getParameter('name')))}" >
+                                Fashion
+                            </a>
+
+                        </div>
+                    </div>
+                    <div class="filter-col4 p-b-27">
+                        <div class="mtext-102 cl2 p-b-15">
+                            Brand
+                        </div>
+
+                        <ul th:each="supply:${vm.getSupplyVMList()}" style="font-family: Arial, Helvetica, sans-serif">
+                            <li class="p-b-6">
+                                <a th:if="${#httpServletRequest.getParameter('supplyId')}==${supply.getId()}"   th:text="${supply.getName()}"
+                                   class="filter-link stext-106 trans-04 filter-link-active"
+                                   th:href="${'?'+(#httpServletRequest.getParameter('categoryId')==null?'':('&categoryId='+#httpServletRequest.getParameter('categoryId')))
+                                              +(#httpServletRequest.getParameter('page')==null?'':('&page='+#httpServletRequest.getParameter('page')))
+                                              +(#httpServletRequest.getParameter('size')==null?'':('&size='+#httpServletRequest.getParameter('size')))
+                                              +(#httpServletRequest.getParameter('colorId')==null?'':('&colorId='+#httpServletRequest.getParameter('colorId')))
+                                              +(#httpServletRequest.getParameter('sizeId')==null?'':('&sizeId='+#httpServletRequest.getParameter('sizeId')))
+                                              +('&supplyId='+supply.getId())
+                                              +(#httpServletRequest.getParameter('name')==null?'':('&name='+#httpServletRequest.getParameter('name')))}" >
+                                    Black
+                                </a>
+
+                                <a th:unless="${#httpServletRequest.getParameter('supplyId')}==${supply.getId()}"   th:text="${supply.getName()}"
+                                   class="filter-link stext-106 trans-04 "
+                                   th:href="${'?'+(#httpServletRequest.getParameter('categoryId')==null?'':('&categoryId='+#httpServletRequest.getParameter('categoryId')))
+                                              +(#httpServletRequest.getParameter('page')==null?'':('&page='+#httpServletRequest.getParameter('page')))
+                                              +(#httpServletRequest.getParameter('size')==null?'':('&size='+#httpServletRequest.getParameter('size')))
+                                              +(#httpServletRequest.getParameter('colorId')==null?'':('&colorId='+#httpServletRequest.getParameter('colorId')))
+                                              +(#httpServletRequest.getParameter('sizeId')==null?'':('&sizeId='+#httpServletRequest.getParameter('sizeId')))
+                                              +('&supplyId='+supply.getId())
+                                              +(#httpServletRequest.getParameter('name')==null?'':('&name='+#httpServletRequest.getParameter('name')))}" >
+                                    Black
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="filter-col3 p-r-15 p-b-27">
+                        <div class="mtext-102 cl2 p-b-15">
+                            Price
+                        </div>
+
+                        <ul style="font-family: Arial, Helvetica, sans-serif">
+                            <li class="p-b-6 ">
+                                <a th:if="${#httpServletRequest.getParameter('sortByPrice')=='DESC'}" class="filter-link stext-106 trans-04 filter-link-active"
+                                   th:href="${'?'+(#httpServletRequest.getParameter('categoryId')==null?'':('&categoryId='+#httpServletRequest.getParameter('categoryId')))
+                                              +(#httpServletRequest.getParameter('page')==null?'':('&page='+#httpServletRequest.getParameter('page')))
+                                              +(#httpServletRequest.getParameter('size')==null?'':('&size='+#httpServletRequest.getParameter('size')))
+                                              +(#httpServletRequest.getParameter('sizeId')==null?'':('&sizeId='+#httpServletRequest.getParameter('sizeId')))
+                                              +(#httpServletRequest.getParameter('supplyId')==null?'':('&supplyId='+#httpServletRequest.getParameter('supplyId')))
+                                              +(#httpServletRequest.getParameter('colorId')==null?'':('&colorId='+#httpServletRequest.getParameter('colorId')))
+                                              +('&sortByPrice=DESC')
+                                              +(#httpServletRequest.getParameter('name')==null?'':('&name='+#httpServletRequest.getParameter('name')))}" >
+                                    Descending
+                                </a>
+
+                                <a th:unless="${#httpServletRequest.getParameter('sortByPrice')=='DESC'}" class="filter-link stext-106 trans-04"
+                                   th:href="${'?'+(#httpServletRequest.getParameter('categoryId')==null?'':('&categoryId='+#httpServletRequest.getParameter('categoryId')))
+                                              +(#httpServletRequest.getParameter('page')==null?'':('&page='+#httpServletRequest.getParameter('page')))
+                                              +(#httpServletRequest.getParameter('size')==null?'':('&size='+#httpServletRequest.getParameter('size')))
+                                              +(#httpServletRequest.getParameter('sizeId')==null?'':('&sizeId='+#httpServletRequest.getParameter('sizeId')))
+                                              +(#httpServletRequest.getParameter('supplyId')==null?'':('&supplyId='+#httpServletRequest.getParameter('supplyId')))
+                                              +(#httpServletRequest.getParameter('colorId')==null?'':('&colorId='+#httpServletRequest.getParameter('colorId')))
+                                              +('&sortByPrice=DESC')
+                                              +(#httpServletRequest.getParameter('name')==null?'':('&name='+#httpServletRequest.getParameter('name')))}" >
+                                    Descending
+                                </a>
+
+                            </li>
+                            <li class="p-b-6 ">
+                                <a th:if="${#httpServletRequest.getParameter('sortByPrice')=='ASC'}" class="filter-link stext-106 trans-04 filter-link-active"
+                                   th:href="${'?'+(#httpServletRequest.getParameter('categoryId')==null?'':('&categoryId='+#httpServletRequest.getParameter('categoryId')))
+                                              +(#httpServletRequest.getParameter('page')==null?'':('&page='+#httpServletRequest.getParameter('page')))
+                                              +(#httpServletRequest.getParameter('size')==null?'':('&size='+#httpServletRequest.getParameter('size')))
+                                              +(#httpServletRequest.getParameter('sizeId')==null?'':('&sizeId='+#httpServletRequest.getParameter('sizeId')))
+                                              +(#httpServletRequest.getParameter('supplyId')==null?'':('&supplyId='+#httpServletRequest.getParameter('supplyId')))
+                                              +(#httpServletRequest.getParameter('colorId')==null?'':('&colorId='+#httpServletRequest.getParameter('colorId')))
+                                              +('&sortByPrice=ASC')
+                                              +(#httpServletRequest.getParameter('name')==null?'':('&name='+#httpServletRequest.getParameter('name')))}" >
+                                    Ascending
+                                </a>
+
+                                <a th:unless="${#httpServletRequest.getParameter('sortByPrice')=='ASC'}" class="filter-link stext-106 trans-04 "
+                                   th:href="${'?'+(#httpServletRequest.getParameter('categoryId')==null?'':('&categoryId='+#httpServletRequest.getParameter('categoryId')))
+                                              +(#httpServletRequest.getParameter('page')==null?'':('&page='+#httpServletRequest.getParameter('page')))
+                                              +(#httpServletRequest.getParameter('size')==null?'':('&size='+#httpServletRequest.getParameter('size')))
+                                              +(#httpServletRequest.getParameter('sizeId')==null?'':('&sizeId='+#httpServletRequest.getParameter('sizeId')))
+                                              +(#httpServletRequest.getParameter('supplyId')==null?'':('&supplyId='+#httpServletRequest.getParameter('supplyId')))
+                                              +(#httpServletRequest.getParameter('colorId')==null?'':('&colorId='+#httpServletRequest.getParameter('colorId')))
+                                              +('&sortByPrice=ASC')
+                                              +(#httpServletRequest.getParameter('name')==null?'':('&name='+#httpServletRequest.getParameter('name')))}" >
+                                    Ascending
+                                </a>
+
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div th:if="${vm.isFound()&&vm.getKeyWord()!=null}">
+            <div class="alert alert-primary"  th:text="${vm.getKeyWord()}">
+
+            </div>
+        </div>
+        <div th:unless="${vm.isFound()}">
+            <div class="alert alert-danger"  >
+                Product not found!
+            </div>
+        </div>
+        <!--<div th:if="${param.fail}">-->
+            <!--<div class="alert alert-danger">-->
+                <!--Fail param !!-->
+            <!--</div>-->
+        <!--</div>-->
+        <div class="row isotope-grid">
+            <div th:each="product : ${vm.getProductVMList()}" class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item " th:classappend="${product.getCategoryId()}">
+                <!-- Block2 -->
+                <div class="block2 ">
+                    <div class="block2-pic hov-img0">
+                        <img th:src="${product.getMainImage()}" alt="IMG-PRODUCT">
+
+                        <a href="#" th:attr="data-product=${product.getId()}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+                            Quick View
+                        </a>
+                    </div>
+
+                    <div class="block2-txt flex-w flex-t p-t-14">
+                        <div class="block2-txt-child1 flex-col-l ">
+                            <a th:attr="data-product=${product.getId()}" th:href="${'/product/'+product.getId()}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6 showProductDetail" th:text="${product.getName()}">
+                                Esprit Ruffle Shirt
+                            </a>
+                            <div class="row w-100">
+                                <div class="col-9">
+                                    <div>
+                                        <span  class=" fs-18 cl11">
+                                        <i th:each="i: ${#numbers.sequence(1,5)}" th:if="${product.getRateAvg()>= i}" class="zmdi zmdi-star"></i>
+                                        <i th:each="i: ${#numbers.sequence(1,5)}" th:unless="${product.getRateAvg()>= i}" class="item-rating pointer zmdi zmdi-star-outline"></i>
+                                    </span>
+                                    </div>
+
+                                    <div>
+                                        <span class="stext-105 cl3" th:text="${product.getPrice()+' VND'}">
+                                        $16.64
+                                    </span>
+                                    </div>
+                                </div>
+
+                                <!--<div class="col-2">-->
+                                   <!--<a href="#"> <i class="fa fa-cart-plus" style="font-size:20px"></i></a>-->
+
+                                <!--</div>-->
+                            </div>
+                        </div>
+
+                        <div class="block2-txt-child2 flex-r p-t-3">
+                            <!--<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">-->
+                                <!--<i class="fa fa-cart-plus"></i>-->
+                                <!--<img class="icon-heart1 dis-block trans-04" th:src="@{/images/icons/icon-heart-01.png}" alt="ICON">-->
+                                <!--<img class="icon-heart2 dis-block trans-04 ab-t-l" th:src="@{/images/icons/icon-heart-02.png}" alt="ICON">-->
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Load more -->
+        <!--<div class="flex-c-m flex-w w-full p-t-45">-->
+            <!--<a href="#" class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">-->
+                <!--Load more-->
+            <!--</a>-->
+        <!--</div>-->
+
+        <nav style="margin-top: 50px" aria-label="..." th:if="${vm.getProductVMList().size()>0}">
+            <ul class="pagination">
+                <th:block th:each="i: ${#numbers.sequence(0, page.totalPages - 1)}">
+                    <li class="page-item active" th:if="${page.number == i}" aria-current="page">
+                        <a class="page-link" th:href="${''}" th:text="${i+1}"><span class="sr-only"></span></a>
+                    </li>
+                    <li class="page-item"  th:unless="${page.number == i}"><a class="page-link" th:text="${i+1}"
+                                                                              th:href="${'?'+(#httpServletRequest.getParameter('categoryId')==null?'':('&categoryId='+#httpServletRequest.getParameter('categoryId')))
+                                                                                       +('&page='+i)
+                                                                                       +(#httpServletRequest.getParameter('size')==null?'':('&size='+#httpServletRequest.getParameter('size')))
+                                                                                       +(#httpServletRequest.getParameter('sortByPrice')==null?'':('&sortByPrice='+#httpServletRequest.getParameter('sortByPrice')))
+                                                                                       +(#httpServletRequest.getParameter('name')==null?'':('&name='+#httpServletRequest.getParameter('name')))}"></a></li>
+                </th:block>
+            </ul>
+        </nav>
+    </div>
+</section>
+
+<!-- footer -->
+<footer id="footer" class="footer" th:replace="fragments/footer:: footer"></footer>
+
+
+<!-- Back to top -->
+<div class="btn-back-to-top" id="myBtn">
+		<span class="symbol-btn-back-to-top">
+			<i class="zmdi zmdi-chevron-up"></i>
+		</span>
+</div>
+
+
+<!-- modal quick view -->
+<div id="quickView" class="footer" th:replace="fragments/quick-view:: quick-view  (vm=${vm})"></div>
+
+<!--===============================================================================================-->
+<script th:src="@{/vendor/jquery/jquery-3.2.1.min.js}" type="e5d6ee6a7978d5070e084177-text/javascript"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/animsition/js/animsition.min.js}" type="e5d6ee6a7978d5070e084177-text/javascript"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/bootstrap/js/popper.js}" type="e5d6ee6a7978d5070e084177-text/javascript"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}" type="e5d6ee6a7978d5070e084177-text/javascript"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/select2/select2.min.js}" type="e5d6ee6a7978d5070e084177-text/javascript"></script>
+<script type="e5d6ee6a7978d5070e084177-text/javascript">
+		$(".js-select2").each(function(){
+			$(this).select2({
+				minimumResultsForSearch: 20,
+				dropdownParent: $(this).next('.dropDownSelect2')
+			});
+		})
+	</script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/daterangepicker/moment.min.js}" type="e5d6ee6a7978d5070e084177-text/javascript"></script>
+<script th:src="@{/vendor/daterangepicker/daterangepicker.js}" type="e5d6ee6a7978d5070e084177-text/javascript"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/slick/slick.min.js}" type="e5d6ee6a7978d5070e084177-text/javascript"></script>
+<script th:src="@{/js/slick-custom.js}" type="e5d6ee6a7978d5070e084177-text/javascript"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/parallax100/parallax100.js}" type="e5d6ee6a7978d5070e084177-text/javascript"></script>
+<script type="e5d6ee6a7978d5070e084177-text/javascript">
+        $('.parallax100').parallax100();
+	</script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/MagnificPopup/jquery.magnific-popup.min.js}" type="e5d6ee6a7978d5070e084177-text/javascript"></script>
+<script type="e5d6ee6a7978d5070e084177-text/javascript">
+		$('.gallery-lb').each(function() { // the containers for all your galleries
+			$(this).magnificPopup({
+		        delegate: 'a', // the selector for gallery item
+		        type: 'image',
+		        gallery: {
+		        	enabled:true
+		        },
+		        mainClass: 'mfp-fade'
+		    });
+		});
+	</script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/isotope/isotope.pkgd.min.js}" type="e5d6ee6a7978d5070e084177-text/javascript"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/sweetalert/sweetalert.min.js}" type="e5d6ee6a7978d5070e084177-text/javascript"></script>
+<script type="e5d6ee6a7978d5070e084177-text/javascript">
+		$('.js-addwish-b2').on('click', function(e){
+			e.preventDefault();
+		});
+
+		$('.js-addwish-b2').each(function(){
+			var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
+			$(this).on('click', function(){
+				swal(nameProduct, "is added to wishlist !", "success");
+
+				$(this).addClass('js-addedwish-b2');
+				$(this).off('click');
+			});
+		});
+
+		$('.js-addwish-detail').each(function(){
+			var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
+
+			$(this).on('click', function(){
+				swal(nameProduct, "is added to wishlist !", "success");
+
+				$(this).addClass('js-addedwish-detail');
+				$(this).off('click');
+			});
+		});
+
+		/*---------------------------------------------*/
+
+		$('.js-addcart-detail').each(function(){
+			var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
+			$(this).on('click', function(){
+				swal(nameProduct, "is added to cart !", "success");
+			});
+		});
+
+	</script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/perfect-scrollbar/perfect-scrollbar.min.js}" type="e5d6ee6a7978d5070e084177-text/javascript"></script>
+<script type="e5d6ee6a7978d5070e084177-text/javascript">
+		$('.js-pscroll').each(function(){
+			$(this).css('position','relative');
+			$(this).css('overflow','hidden');
+			var ps = new PerfectScrollbar(this, {
+				wheelSpeed: 1,
+				scrollingThreshold: 1000,
+				wheelPropagation: false,
+			});
+
+			$(window).on('resize', function(){
+				ps.update();
+			})
+		});
+	</script>
+<!--===============================================================================================-->
+<script th:src="@{/js/main.js}" type="e5d6ee6a7978d5070e084177-text/javascript"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13" type="e5d6ee6a7978d5070e084177-text/javascript"></script>
+<script type="e5d6ee6a7978d5070e084177-text/javascript">
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-23581568-13');
+</script>
+
+<script src="https://ajax.cloudflare.com/cdn-cgi/scripts/a2bd7673/cloudflare-static/rocket-loader.min.js" data-cf-settings="e5d6ee6a7978d5070e084177-|49" defer=""></script></body>
+<!-- jQuery -->
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<!--===============================================================================================-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.9.0/sweetalert2.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+<script th:src="@{/js/price-range.js}"></script>
+<script th:src="@{/js/home.js}"></script>
+<script th:src="@{/js/script.js}"></script>
+<script th:src="@{/js/add-to-cart.js}"></script>
+<script  th:inline="javascript">
+    var vm = [[${vm}]];
+    $('#sl2').slider();
+</script>
+</html>

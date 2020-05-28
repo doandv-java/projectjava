@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Report</title>
+<!--    <link rel="icon" type="image/png" th:href="@{/images/logo-small.png}"/>-->
+
+    <!-- Bootstrap Core CSS -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link th:href="@{/css/metisMenu.min.css}" rel="stylesheet">
+    <link th:href="@{/css/metisMenu.min.css}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link th:href="@{/css/startmin.css}" rel="stylesheet">
+    <!--<link th:href="@{/css/theme.css}" rel="stylesheet">-->
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <!--<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" type="text/css">-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">-->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+<div id="wrapper">
+
+    <!-- Navigation -->
+    <div th:replace="fragments/header-admin :: header_admin_info (vm=${vm.getLayoutHeaderAdminVM()})"></div>
+
+
+    <!-- Page Content -->
+    <div id="page-wrapper">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header"></h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-4 col-md-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-comments fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge" th:text="${vm.getUnread()}">26</div>
+                                    <div>Unread Messages</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/admin/mail">
+                            <div class="panel-footer">
+                                <span class="pull-left">Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-usd fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge" th:text="${vm.getTotalPriceOfWeek()+' VND'}">12</div>
+                                    <div>Total Price Of Week</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/admin/mail">
+                            <div class="panel-footer">
+                                <!--<span class="pull-left">Chi tiết</span>-->
+                                <!--<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>-->
+
+                                <!--<div class="clearfix"></div>-->
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-shopping-cart fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge" th:text="${vm.getTotalOrderOfWeek()}">124</div>
+                                    <div>Total Orders of Week</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/admin/order">
+                            <div class="panel-footer">
+                                <span class="pull-left">Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+                <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="">
+                        <div class="card-body mx-auto">
+                            <canvas id="chart-profit" style="height: 300px"></canvas>
+
+
+                            <!--<canvas id="chart-count-product-sold" style="height: 300px"></canvas>-->
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.row -->
+        </div>
+        <div class="row" style=" margin: 10px">
+            <div class="col-sm-8 " >
+                <div class="">
+                    <div class="mx-auto card" >
+                        <canvas id="chart-count-product-by-category-type-bar"></canvas>
+
+                    </div>
+                    <div class=" mx-auto card mt-5">
+                        <canvas id="chart2"></canvas>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div>
+                    <div class=" mx-auto card">
+                        <canvas id="chart1"></canvas>
+
+                    </div>
+                    <div class="mx-auto card mt-5" >
+                        <canvas id="chart3"></canvas>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+
+    </div>
+    <!-- /#page-wrapper -->
+
+
+
+</div>
+<!-- /#wrapper -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.9.0/sweetalert2.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+
+<!-- jQuery -->
+<script th:src="@{/js/jquery.min.js}"></script>
+<!--<script th:src="@{/js/jquery-ui.js}"></script>-->
+<!--<script th:src="@{/js/jquery-migrate-3.0.0.min.js}"></script>-->
+<!--<script th:src="@{/js/Inform.js}"></script>-->
+<!--<script th:src="@{/plugin/tinymce/tinymce.min.js}"></script>-->
+<!--<script th:src="@{/plugin/tinymce/init-tinymce.js}"></script>-->
+
+<!-- Bootstrap Core JavaScript -->
+<script th:src="@{/js/bootstrap.min.js}"></script>
+
+<!-- Metis Menu Plugin JavaScript -->
+<script th:src="@{/js/metisMenu.min.js}"></script>
+<script th:src="@{/js/chart.js}"></script>
+<script th:src="@{/js/Chart.bundle.js}"></script>
+<!-- Custom Theme JavaScript -->
+<script th:src="@{/js/startmin.js}"></script>
+<script th:src="@{/js/bootbox.min.js}"></script>
+
+<script th:src="@{/js/admin-product.js}"></script>
+<script th:src="@{/js/script.js}"></script>
+
+<script th:inline="javascript">
+    var vm = [[${vm}]];
+    console.log("data vm:",vm);
+
+    $(document).ready(function () {
+
+
+        function setDataChart(arr) {
+            listLabel= [];
+            listData = [];
+            for(var i = 0; i < arr.length; i++) {
+                listLabel.push(arr[i].label);
+                listData.push(arr[i].data);
+            }
+        };
+
+        function chartCountProductByCategoryTypeBar() {
+            setDataChart(vm.countProductByCategory.labelDataVMList);
+            console.log(vm);
+            var myChart = $('#chart-count-product-by-category-type-bar')[0].getContext('2d');
+
+
+            var massPopChart = new Chart(myChart, {
+                type:'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+                data:{
+                    labels:listLabel,
+                    datasets:[{
+                        label:'Amount',
+                        data: listData,
+                        //backgroundColor:'green',
+                        backgroundColor:[
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(255, 206, 86, 0.6)',
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(153, 102, 255, 0.6)'
+                            ,'rgba(255, 159, 64, 0.6)'
+                            ,'rgba(255, 99, 132, 0.6)'
+                        ],
+                        borderWidth:1,
+                        borderColor:'#777',
+                        hoverBorderWidth:3,
+                        hoverBorderColor:'#000'
+                    }]
+                },
+                options:{
+                    title:{
+                        display:true,
+                        text:'Statistics of products by category',
+                        fontSize:25
+                    },
+                    legend:{
+                        display:false,
+                        position:'right',
+                        labels:{
+                            fontColor:'#000'
+                        }
+                    },
+                    layout:{
+                        padding:{
+                            left:50,
+                            right:0,
+                            bottom:0,
+                            top:0
+                        }
+                    },
+                    tooltips:{
+                        enabled:true
+                    }
+                }
+            });
+        }
+        function chart1() {
+            setDataChart(vm.countProductByCategory.labelDataVMList);
+            console.log(vm);
+            var myChart = $('#chart1')[0].getContext('2d');
+
+
+            var massPopChart = new Chart(myChart, {
+                type:'pie', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+                data:{
+                    labels:listLabel,
+                    datasets:[{
+                        label:'Amount',
+                        data: listData,
+                        //backgroundColor:'green',
+                        backgroundColor:[
+                            // 'rgba(255, 99, 132, 0.6)',
+                            // 'rgba(54, 162, 235, 0.6)',
+                            // 'rgba(255, 206, 86, 0.6)',
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(153, 102, 255, 0.6)'
+                            ,'rgba(255, 159, 64, 0.6)'
+                            ,'rgba(255, 99, 132, 0.6)'
+                        ],
+                        borderWidth:1,
+                        borderColor:'#777',
+                        hoverBorderWidth:3,
+                        hoverBorderColor:'#000'
+                    }]
+                },
+                options:{
+                    title:{
+                        display:true,
+                        text:'Statistics of products by category',
+                        fontSize:25
+                    },
+                    legend:{
+                        display:false,
+                        position:'right',
+                        labels:{
+                            fontColor:'#000'
+                        }
+                    },
+                    layout:{
+                        padding:{
+                            left:0,
+                            right:0,
+                            bottom:0,
+                            top:0
+                        }
+                    },
+                    tooltips:{
+                        enabled:true
+                    }
+                }
+            });
+        }
+        function chart3() {
+            setDataChart(vm.countProductByCategory.labelDataVMList);
+            console.log(vm);
+            var myChart = $('#chart3')[0].getContext('2d');
+
+
+            var massPopChart = new Chart(myChart, {
+                type:'doughnut', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+                data:{
+                    labels:listLabel,
+                    datasets:[{
+                        label:'Amount',
+                        data: listData,
+                        //backgroundColor:'green',
+                        backgroundColor:[
+                            // 'rgba(255, 99, 132, 0.6)',
+                            // 'rgba(54, 162, 235, 0.6)',
+                             'rgba(255, 206, 86, 0.6)',
+                            //'rgba(75, 192, 192, 0.6)',
+                           // 'rgba(153, 102, 255, 0.6)'
+                            ,'rgba(255, 159, 64, 0.6)'
+                            ,'rgba(255, 99, 132, 0.6)'
+                        ],
+                        borderWidth:1,
+                        borderColor:'#777',
+                        hoverBorderWidth:3,
+                        hoverBorderColor:'#000'
+                    }]
+                },
+                options:{
+                    title:{
+                        display:true,
+                        text:'Statistics of products by category',
+                        fontSize:25
+                    },
+                    legend:{
+                        display:false,
+                        position:'right',
+                        labels:{
+                            fontColor:'#000'
+                        }
+                    },
+                    layout:{
+                        padding:{
+                            left:0,
+                            right:0,
+                            bottom:0,
+                            top:0
+                        }
+                    },
+                    tooltips:{
+                        enabled:true
+                    }
+                }
+            });
+        }
+        function chart2() {
+            setDataChart(vm.countProductByCategory.labelDataVMList);
+            console.log(vm);
+            var myChart = $('#chart2')[0].getContext('2d');
+
+
+            var massPopChart = new Chart(myChart, {
+                type:'radar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+                data:{
+                    labels:listLabel,
+                    datasets:[{
+                        label:'Amount',
+                        data: listData,
+                        //backgroundColor:'green',
+                        backgroundColor:[
+                            // 'rgba(255, 99, 132, 0.6)',
+                            // 'rgba(54, 162, 235, 0.6)',
+                            // 'rgba(255, 206, 86, 0.6)',
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(153, 102, 255, 0.6)'
+                            ,'rgba(255, 159, 64, 0.6)'
+                            ,'rgba(255, 99, 132, 0.6)'
+                        ],
+                        borderWidth:1,
+                        borderColor:'#777',
+                        hoverBorderWidth:3,
+                        hoverBorderColor:'#000'
+                    }]
+                },
+                options:{
+                    title:{
+                        display:true,
+                        text:'Statistics of category',
+                        fontSize:25
+                    },
+                    legend:{
+                        display:false,
+                        position:'right',
+                        labels:{
+                            fontColor:'#000'
+                        }
+                    },
+                    layout:{
+                        padding:{
+                            left:0,
+                            right:0,
+                            bottom:0,
+                            top:0
+                        }
+                    },
+                    tooltips:{
+                        enabled:true
+                    }
+                }
+            });
+        }
+        function chartProfit() {
+            setDataChart(vm.profitInWeek.labelDataVMList);
+            console.log(vm);
+            var myChart = $('#chart-profit')[0].getContext('2d');
+
+
+            var massPopChart = new Chart(myChart, {
+                type:'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+                data:{
+                    labels:listLabel,
+                    datasets:[{
+                        label:'Total Price',
+                        data: listData,
+                        //backgroundColor:'green',
+                        // backgroundColor:[
+                        //     'rgba(255, 99, 132, 0.6)',
+                        //     'rgba(54, 162, 235, 0.6)',
+                        //     'rgba(255, 206, 86, 0.6)',
+                        //     'rgba(75, 192, 192, 0.6)',
+                        //     'rgba(153, 102, 255, 0.6)'
+                        //     ,'rgba(255, 159, 64, 0.6)'
+                        //     ,'rgba(255, 99, 132, 0.6)'
+                        // ],
+                        borderWidth:1,
+                        borderColor:'#777',
+                        hoverBorderWidth:3,
+                        hoverBorderColor:'#000'
+                    }]
+                },
+                options:{
+                    title:{
+                        display:true,
+                        text:'Total Price ',
+                        fontSize:25
+                    },
+                    legend:{
+                        display:false,
+                        position:'right',
+                        labels:{
+                            fontColor:'#000'
+                        }
+                    },
+                    layout:{
+                        padding:{
+                            left:50,
+                            right:0,
+                            bottom:0,
+                            top:0
+                        }
+                    },
+                    tooltips:{
+                        enabled:true
+                    }
+                }
+            });
+        }
+
+        function main() {
+            chartCountProductByCategoryTypeBar();
+            chartProfit();
+            chart1();
+            chart2();
+            chart3();
+            // chartCountProductByCategoryTypePie();
+            // chartCountProductSold();
+        }
+
+        main();
+    })
+</script>
+</body>
+</html>
